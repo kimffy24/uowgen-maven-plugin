@@ -69,7 +69,7 @@ public class UoWMojo extends AbstractMojo {
 	private static final String PACKAGE_INFO_JAVA_FILE_CONTENT_TPL = "package {}; \n\n\n/* ***\n"
 			+ "当前这个包由UoW-gen模块生成，请不要手动编辑。(特殊情况下，可以把这个包删除，并用下面命令重新生成。) \n\n"
 			+ "参考生成命令: \n\n"
-			+ "\tmvn clean compile com.github.kimffy24:uowgen-maven-plugin:0.0.1-SNAPSHOT:uow-gen -DoutputSpec={}"
+			+ "\tmvn clean compile com.github.kimffy24:uowgen-maven-plugin:0.0.2.1:uow-gen -DoutputSpec={}"
 			+ "\n\n"
 			+ "如无法正确加载生成的mapper文件，则需要在入口类上加上mybatis的扫描注解\n\n"
 			+ "\t@MapperScan(\"{}\")"
