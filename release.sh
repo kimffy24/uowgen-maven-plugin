@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ## --------- 控制流变量
-GIT_TAG_COMMIT="[#3] 发布脚本自动递进"
+GIT_TAG_COMMIT="[#1] 发布脚本自动递进"
 LINE_NUM_TAG=20
 
 
