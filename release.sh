@@ -87,7 +87,6 @@ $SED -i "${LINE_NUM_TAG}d ; ${LINE_NUM_TAG_NEW}a\<tag\>${VERSION_TAG}\<\/tag\>" 
 
 # 针对UoWgen-maven-pluginjia'd加的；
 $SED -i "52d ; 51a\"${VERSION_DEPLOY}\"" src/main/java/com/github/kimffy24/uow/mavenplugin/UoWMojo.java
-exit 0
 
 if [ "z${VERSION_CURR}" != "${VERSION_NEW}" ] ; then
     echo "!!! we will change version in your maven project, do you accept this action?"
