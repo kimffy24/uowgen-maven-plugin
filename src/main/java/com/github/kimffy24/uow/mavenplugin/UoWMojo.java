@@ -44,6 +44,14 @@ import pro.jk.ejoker.common.utils.ClassNamesScanner;
 )
 public class UoWMojo extends AbstractMojo {
 	
+	/**
+	 * 这个变量不要自己改，我这里是让release脚本发布时自己替换上发布的版本的；
+	 * 默认情况，mvn插件不提供版本时执行的话，mvn会给我们拉取最新版本的；无妨。
+	 */
+	private static final String CURRENT_UOW_CODEGEN_VERSION =
+			""
+			;
+
 	private static final String OUTPUT_PACKAGE_INFO_JAVA_FILE = "package-info.java";
 
 	private static final String OUTPUT_RBIND_JSON_FILE = "uow-gen-rbind-info.json";
@@ -69,7 +77,7 @@ public class UoWMojo extends AbstractMojo {
 	private static final String PACKAGE_INFO_JAVA_FILE_CONTENT_TPL = "package {}; \n\n\n/* ***\n"
 			+ "当前这个包由UoW-gen模块生成，请不要手动编辑。(特殊情况下，可以把这个包删除，并用下面命令重新生成。) \n\n"
 			+ "参考生成命令: \n\n"
-			+ "\tmvn clean compile com.github.kimffy24:uowgen-maven-plugin:0.0.2.1:uow-gen -DoutputSpec={}"
+			+ "\tmvn clean compile com.github.kimffy24:uowgen-maven-plugin:" + CURRENT_UOW_CODEGEN_VERSION + ":uow-gen -DoutputSpec={}"
 			+ "\n\n"
 			+ "如无法正确加载生成的mapper文件，则需要在入口类上加上mybatis的扫描注解\n\n"
 			+ "\t@MapperScan(\"{}\")"
