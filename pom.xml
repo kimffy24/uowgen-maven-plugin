@@ -7,7 +7,7 @@
 
 	<groupId>com.github.kimffy24</groupId>
 	<artifactId>uowgen-maven-plugin</artifactId>
-	<version>0.0.2.2</version>
+	<version>0.1.0.0</version>
 
 	<name>UoW Codegen Maven Plugin</name>
 	<description>Useful Maven Plugin that executes code generate for uow</description>
@@ -17,7 +17,7 @@
 		<url>https://github.com/kimffy24/uowgen-maven-plugin</url>
 		<connection>scm:git@github.com:kimffy24/uowgen-maven-plugin.git</connection>
 		<developerConnection>scm:git:git@github.com:kimffy24/uowgen-maven-plugin.git</developerConnection>
-<tag>v0.0.2.2</tag>
+<tag>v0.1.0.0</tag>
 	</scm>
 	
 	<licenses>

@@ -49,7 +49,7 @@ public class UoWMojo extends AbstractMojo {
 	 * 默认情况，mvn插件不提供版本时执行的话，mvn会给我们拉取最新版本的；无妨。
 	 */
 	private static final String CURRENT_UOW_CODEGEN_VERSION =
-"0.0.2.2"
+"0.1.0.0"
 			;
 
 	private static final String OUTPUT_PACKAGE_INFO_JAVA_FILE = "package-info.java";
