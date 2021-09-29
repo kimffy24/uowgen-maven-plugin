@@ -55,6 +55,8 @@ public class UoWMojo extends AbstractMojo {
 	private static final String OUTPUT_PACKAGE_INFO_JAVA_FILE = "package-info.java";
 
 	private static final String OUTPUT_RBIND_JSON_FILE = "uow-gen-rbind-info.json";
+	
+	private static final String OUTPUT_RBIND_JSON_PATH_PROVIDER_JAVA_CLASS_NAME = "GenRBinderProviderGenImpl";
 
 	private static final String OUTPUT_MAPPER_JAVA_FILE_TMP = "{}UoWMapper";
 	
@@ -68,21 +70,30 @@ public class UoWMojo extends AbstractMojo {
 	
 	private static final String UoWGenerationUtilMainMethod = "generateSqlMapperF";
 	
-	private static final String MAPPER_JAVA_FILE_CONTENT_TPL = "package {}; "
-//			+ "import org.springframework.stereotype.Repository; "
-			+ "import com.github.kimffy24.uow.export.mapper.ILocatorMapper; "
-//			+ "@Repository "
-			+ "public interface {} extends ILocatorMapper \\{ \\}";
+	private static final String MAPPER_JAVA_FILE_CONTENT_TPL = "package {};\n"
+			+ "@org.apache.ibatis.annotations.Mapper \n"
+			+ "public interface {} extends com.github.kimffy24.uow.export.mapper.ILocatorMapper \\{ \\}";
 	
 	private static final String PACKAGE_INFO_JAVA_FILE_CONTENT_TPL = "package {}; \n\n\n/* ***\n"
 			+ "当前这个包由UoW-gen模块生成，请不要手动编辑。(特殊情况下，可以把这个包删除，并用下面命令重新生成。) \n\n"
 			+ "参考生成命令: \n\n"
 			+ "\tmvn clean compile com.github.kimffy24:uowgen-maven-plugin:" + CURRENT_UOW_CODEGEN_VERSION + ":uow-gen -DoutputSpec={}"
 			+ "\n\n"
-			+ "如无法正确加载生成的mapper文件，则需要在入口类上加上mybatis的扫描注解\n\n"
-			+ "\t@MapperScan(\"{}\")"
+			+ "如无法正确加载生成的mapper文件，则需要手动使用@RBind注解主动绑定UoW基类与Mapper类的绑定关系\n\n"
 			+ "\n\n"
 			+ "*/";
+	
+	private static final String RBIND_CONFIG_PATH_PROVIDER_CONTENT_TPL = "package {};\n"
+			+ "@org.springframework.stereotype.Service(\"uow-code-gen-rbind-config-aware\")\n"
+			+ "public class {} implements com.github.kimffy24.uow.service.aware.IGenRBinderProvider \\{\n"
+			+ "@Override public String getPrefixclasspath() \\{\n"
+			+ "return \"{}\";\n"
+			+ "\\}\n"
+			+ "@Override public String getJsonConfigFileName() \\{\n"
+			+ "return \"{}\";\n"
+			+ "\\}\n"
+			+ "\\}\n"
+			;
 
 	@Parameter(defaultValue = "${project}")
 	protected MavenProject project;
@@ -250,12 +261,22 @@ public class UoWMojo extends AbstractMojo {
 			writeFile(outputDirectoryFinal, v + ".java", fmt(MAPPER_JAVA_FILE_CONTENT_TPL, mapperClassPrefix, v));
 			rbindInfo.put(k.getName(), mapperClassPrefix + "." + v);
 		});
-		// step-3-2  rbind参照表
-		writeFile(outputDirectory, OUTPUT_RBIND_JSON_FILE, JSONObject.toJSONString(rbindInfo));
+		// step-3-2  rbind参照表(json) 以及 rbind路径信息provider类
+		writeFile(outputDirectoryFinal, OUTPUT_RBIND_JSON_FILE, JSONObject.toJSONString(rbindInfo));
+		writeFile(outputDirectoryFinal,
+				OUTPUT_RBIND_JSON_PATH_PROVIDER_JAVA_CLASS_NAME + ".java",
+				fmt(RBIND_CONFIG_PATH_PROVIDER_CONTENT_TPL,
+						mapperClassPrefix,
+						OUTPUT_RBIND_JSON_PATH_PROVIDER_JAVA_CLASS_NAME,
+						outputSpecFinal,
+						OUTPUT_RBIND_JSON_FILE
+						));
 		
 		// step-3-3  生成pakcage-info.java
 		writeFile(outputDirectoryFinal, OUTPUT_PACKAGE_INFO_JAVA_FILE,
 				fmt(PACKAGE_INFO_JAVA_FILE_CONTENT_TPL, mapperClassPrefix, outputSpecFinalx, mapperClassPrefix));
+		
+		getLog().info(fmt("CodeGen has build some new file in {} \n\t\t You should rebuild your project after codegen.", outputSpecFinal));
 	}
 	
 	private void writeFile(File targetDir, final String filename, final String content) {
